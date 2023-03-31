@@ -7,21 +7,25 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    private static List<Integer> list = new ArrayList<>();
+    private static List<Integer> responseList = new ArrayList<>();
 
-    public Data processing(Data data) {
+    public static Data processing(Data data) {
         delay();
-        list.add(data.getX());
-        data.setX(list.size());
+        responseList.add(data.getX());
+        data.setX(responseList.size());
 
         return data;
     }
 
-    private void delay(){
+    private static void delay(){
         try {
             TimeUnit.MILLISECONDS.sleep((long) (100 + Math.random() * 1000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<Integer> getResponseList() {
+        return responseList;
     }
 }

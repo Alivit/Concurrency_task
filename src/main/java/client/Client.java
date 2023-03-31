@@ -14,32 +14,48 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Client {
 
-    private List<Integer> list = new ArrayList<>();
+    private List<Integer> requestList = new ArrayList<>();
     private int accumulator = 0;
+    private int size;
+
+    public Client(int size){
+        this.size = size;
+    }
+
+    public Client(){
+        size = 100;
+    }
 
     public void send() {
         ExecutorService executorService;
+        requestList = Generate.generateList(size);
 
-        Generate.generateList(list);
-        executorService = Executors.newFixedThreadPool(list.size());
+        executorService = Executors.newFixedThreadPool(requestList.size());
 
-        while (!list.isEmpty()) calculation(executorService.submit(new Request(list)));
+        while (!requestList.isEmpty()) calculation(executorService.submit(new Request(requestList)));
 
         executorService.shutdown();
 
-        System.out.println("Size list: " + list.size());
-        System.out.println("Total sum: "+ accumulator);
+        System.out.println(accumulator);
     }
 
     private void calculation(Future<Integer> future){
         ReentrantLock locker = new ReentrantLock();
         locker.lock();
         try {
-            System.out.println(accumulator += future.get());
+            accumulator += future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         locker.unlock();
+    }
+
+    public List<Integer> getRequestList() {
+        return requestList;
+    }
+
+    public int getAccumulator() {
+        return accumulator;
     }
 }
 

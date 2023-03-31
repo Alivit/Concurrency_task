@@ -18,10 +18,8 @@ public class Request implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        Server server = new Server();
-
         generateRequest();
-        data = server.processing(data);
+        data = Server.processing(data);
         return data.getX();
     }
 
